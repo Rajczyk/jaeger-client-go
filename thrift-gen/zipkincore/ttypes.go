@@ -720,7 +720,7 @@ type Span struct {
 	Debug             bool                `thrift:"debug,9" json:"debug,omitempty"`
 	Timestamp         *int64              `thrift:"timestamp,10" json:"timestamp,omitempty"`
 	Duration          *int64              `thrift:"duration,11" json:"duration,omitempty"`
-	TraceIDHigh 	  *int64 			  `thrift:"trace_id_high,12" json:"trace_id_high,omitempty"`
+	TraceIDHigh 	  *int64              `thrift:"trace_id_high,12" json:"trace_id_high,omitempty"`
 }
 
 func NewSpan() *Span {
@@ -1175,14 +1175,16 @@ func (p *Span) writeField11(oprot thrift.TProtocol) (err error) {
 }
 
 func (p *Span) writeField12(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("trace_id_high", thrift.I64, 12); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:trace_id: ", p), err)
-	}
-	if err := oprot.WriteI64(int64(*p.TraceIDHigh)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.trace_id_high (12) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 12:trace_id_high: ", p), err)
+	if p.IsSetTraceIDHigh() {
+		if err := oprot.WriteFieldBegin("trace_id_high", thrift.I64, 12); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 12:trace_id_high: ", p), err)
+		}
+		if err := oprot.WriteI64(int64(*p.TraceIDHigh)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.trace_id_high (12) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 12:trace_id_high: ", p), err)
+		}
 	}
 	return err
 }
